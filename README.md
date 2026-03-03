@@ -6,6 +6,10 @@ A mortality ticker that lives in your Mac toolbar. See your remaining days, week
 
 **Free · macOS 13+**
 
+### [Download for Mac](https://github.com/Guy-M-Builds/MortalityBar/releases/latest/download/MortalityBar.dmg)
+
+> First launch: right-click the app → **Open** (required once for unsigned apps)
+
 ---
 
 <p align="center">
