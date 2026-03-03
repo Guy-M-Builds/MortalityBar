@@ -428,7 +428,7 @@
     <div class="hero-icon">&#9203;</div>
     <h1>memento</h1>
     <p class="tagline">Your life, counted.</p>
-    <p class="subtitle">A mortality ticker that lives in your Mac menu bar. See your remaining days, weeks, and life percentage &mdash; always.</p>
+    <p class="subtitle">A mortality ticker that lives in your Mac menu bar. See your remaining days, months, and life percentage.</p>
     <a href="https://github.com/Guy-M-Builds/MortalityBar/releases/latest/download/MortalityBar.dmg" class="cta">Download for Mac</a>
     <span class="cta-note">Free &middot; macOS 13+ &middot; No account needed</span>
     <div class="badges">
@@ -512,12 +512,12 @@
 
     <!-- Life in Weeks -->
     <section>
-      <p class="section-label">Life in Weeks</p>
-      <h2 class="section-title">See every week. All of them.</h2>
-      <p class="section-desc">52 columns. One row per year. Filled = lived. Empty = ahead of you.</p>
+      <p class="section-label">Life in Months</p>
+      <h2 class="section-title">See every month. All of them.</h2>
+      <p class="section-desc">Each dot = one month of your life. Filled = lived. Empty = ahead of you.</p>
       <div class="weeks-visual">
         <div class="weeks-grid" id="weeksGrid"></div>
-        <p class="weeks-caption">Each dot = 1 week &middot; Each row = 1 year</p>
+        <p class="weeks-caption">Each dot = 1 month &middot; Each row = 4 years</p>
       </div>
     </section>
 
@@ -583,13 +583,13 @@
   </div>
 
   <script>
-    // Generate the weeks grid visualization
+    // Generate the months grid visualization
     const grid = document.getElementById('weeksGrid');
-    const totalWeeks = 52 * 5; // Show 5 rows
-    const livedWeeks = Math.floor(totalWeeks * 0.55);
-    for (let i = 0; i < totalWeeks; i++) {
+    const totalMonths = 48 * 20; // 48 columns x 20 rows (~80 years)
+    const livedMonths = Math.floor(totalMonths * 0.45);
+    for (let i = 0; i < totalMonths; i++) {
       const dot = document.createElement('div');
-      dot.className = 'week-dot' + (i >= livedWeeks ? ' empty' : '');
+      dot.className = 'week-dot' + (i >= livedMonths ? ' empty' : '');
       grid.appendChild(dot);
     }
   </script>
