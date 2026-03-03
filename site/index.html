@@ -197,6 +197,29 @@
       color: var(--accent);
     }
 
+    /* Fun Units Row */
+    .mock-units-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      padding-top: 20px;
+      border-top: 1px solid #2a2a3e;
+      margin-bottom: 24px;
+    }
+
+    .mock-unit-val {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .mock-unit-name {
+      display: block;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
     .mock-quote {
       font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
       font-size: 0.8rem;
@@ -438,6 +461,14 @@
               <p class="mock-stat-value">27.6%</p>
             </div>
           </div>
+          <div class="mock-units-row">
+            <div><span class="mock-unit-val">47,541</span><span class="mock-unit-name">&#127829; Meals</span></div>
+            <div><span class="mock-unit-val">2,406</span><span class="mock-unit-name">&#128553; Mondays</span></div>
+            <div><span class="mock-unit-val">570</span><span class="mock-unit-name">&#127765; Full Moons</span></div>
+            <div><span class="mock-unit-val">46</span><span class="mock-unit-name">&#127876; Christmases</span></div>
+            <div><span class="mock-unit-val">11</span><span class="mock-unit-name">&#127942; World Cups</span></div>
+            <div><span class="mock-unit-val">4</span><span class="mock-unit-name">4&#65039;&#8419; Decades</span></div>
+          </div>
           <p class="mock-quote"><span class="mock-reaper-icon">&#128128;</span> <span class="mock-reaper-label">Reaper says</span><br>"You have 2,046 Mondays left. Make them count."</p>
         </div>
       </div>
@@ -513,23 +544,25 @@
 
     <!-- Stats -->
     <section>
-      <p class="section-label">By the Numbers</p>
+      <p class="section-label">In Other Units</p>
+      <h2 class="section-title">Your life, quantified.</h2>
+      <p class="section-desc">Some numbers hit harder than others.</p>
       <div class="stats">
         <div>
-          <p class="stat-value">63</p>
-          <p class="stat-label">Countries</p>
+          <p class="stat-value">&#127829; 47,541</p>
+          <p class="stat-label">Meals</p>
         </div>
         <div>
-          <p class="stat-value">WHO</p>
-          <p class="stat-label">Data Source</p>
+          <p class="stat-value">&#127765; 570</p>
+          <p class="stat-label">Full Moons</p>
         </div>
         <div>
-          <p class="stat-value">M/F</p>
-          <p class="stat-label">Gender-specific</p>
+          <p class="stat-value">&#127876; 46</p>
+          <p class="stat-label">Christmases</p>
         </div>
         <div>
-          <p class="stat-value">$0</p>
-          <p class="stat-label">Price</p>
+          <p class="stat-value">&#127942; 11</p>
+          <p class="stat-label">World Cups</p>
         </div>
       </div>
     </section>
