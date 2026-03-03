@@ -1,0 +1,20 @@
+name: MortalityBar
+options:
+  bundleIdPrefix: com.mortalitybar
+  deploymentTarget:
+    macOS: "13.0"
+
+targets:
+  MortalityBar:
+    type: application
+    platform: macOS
+    sources:
+      - MortalityBar
+    info:
+      path: MortalityBar/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mortalitybar.app
+        SWIFT_VERSION: "5.9"
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
