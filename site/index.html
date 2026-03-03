@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>memento — Your life, counted.</title>
+  <meta name="description" content="A mortality ticker that lives in your Mac toolbar. See your remaining days, weeks, and life percentage — always.">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --border: #222;
+      --text: #e5e5e5;
+      --text-muted: #888;
+      --accent: #a78bfa;
+      --accent-dim: rgba(167, 139, 250, 0.15);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 100px 24px 80px;
+    }
+
+    .hero-icon {
+      font-size: 48px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .hero .tagline {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .hero .subtitle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin: 0 auto 40px;
+    }
+
+    .cta {
+      display: inline-block;
+      background: var(--accent);
+      color: #000;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 14px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .cta:hover { opacity: 0.85; }
+
+    .cta-note {
+      display: block;
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .badges {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* Sections */
+    section {
+      padding: 64px 0;
+    }
+
+    section + section {
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      max-width: 540px;
+    }
+
+    /* Feature Grid */
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .feature {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .feature-name {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .feature-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Weeks Grid Visual */
+    .weeks-visual {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .weeks-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      justify-content: center;
+      max-width: 480px;
+      margin: 24px auto 0;
+    }
+
+    .week-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 1px;
+      background: var(--accent);
+      opacity: 0.8;
+    }
+
+    .week-dot.empty {
+      background: var(--border);
+      opacity: 0.5;
+    }
+
+    .weeks-caption {
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Quotes */
+    .quotes {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .quote {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+    }
+
+    .quote-day {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .quote-text {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Stats Row */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      text-align: center;
+    }
+
+    footer .footer-tagline {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    footer .footer-sub {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    footer .footer-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 32px;
+    }
+
+    footer .footer-meta a {
+      color: var(--text-muted);
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2.25rem; }
+      .features { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+      .hero { padding: 72px 24px 56px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-icon">&#9203;</div>
+    <h1>memento</h1>
+    <p class="tagline">Your life, counted.</p>
+    <p class="subtitle">A mortality ticker that lives in your Mac menu bar. See your remaining days, weeks, and life percentage &mdash; always.</p>
+    <a href="https://github.com/Guy-M-Builds/MortalityBar/releases/latest/download/MortalityBar.dmg" class="cta">Download for Mac</a>
+    <span class="cta-note">Free &middot; macOS 13+ &middot; No account needed</span>
+    <div class="badges">
+      <span class="badge">macOS 13+</span>
+      <span class="badge">Swift 5.9</span>
+      <span class="badge">Free</span>
+      <span class="badge">0 dependencies</span>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Features -->
+    <section>
+      <p class="section-label">Features</p>
+      <h2 class="section-title">Everything at a glance</h2>
+      <p class="section-desc">Six thoughtfully crafted components working together in your menu bar.</p>
+      <div class="features">
+        <div class="feature">
+          <p class="feature-name">Life Calculator</p>
+          <p class="feature-desc">Days remaining, weeks left, life percentage, fun units, and your precise age string.</p>
+        </div>
+        <div class="feature">
+          <p class="feature-name">Popover View</p>
+          <p class="feature-desc">Click the ticker to see your stats, life-in-weeks grid, fun units, and quick settings.</p>
+        </div>
+        <div class="feature">
+          <p class="feature-name">Settings</p>
+          <p class="feature-desc">Birthday, country, gender, display format, and launch-at-login. 63 countries with WHO data.</p>
+        </div>
+        <div class="feature">
+          <p class="feature-name">Rotating Status</p>
+          <p class="feature-desc">Four display formats cycle through your menu bar &mdash; percentage, days, weeks, and custom.</p>
+        </div>
+        <div class="feature">
+          <p class="feature-name">Life in Weeks</p>
+          <p class="feature-desc">Canvas-rendered 52-column grid. Every week of your life, visualized.</p>
+        </div>
+        <div class="feature">
+          <p class="feature-name">Snarky Quotes</p>
+          <p class="feature-desc">65 weekday-keyed quotes. Because nothing motivates like dark humor.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Life in Weeks -->
+    <section>
+      <p class="section-label">Life in Weeks</p>
+      <h2 class="section-title">See every week. All of them.</h2>
+      <p class="section-desc">52 columns. One row per year. Filled = lived. Empty = ahead of you.</p>
+      <div class="weeks-visual">
+        <div class="weeks-grid" id="weeksGrid"></div>
+        <p class="weeks-caption">Each dot = 1 week &middot; Each row = 1 year</p>
+      </div>
+    </section>
+
+    <!-- Quotes -->
+    <section>
+      <p class="section-label">Daily Motivation</p>
+      <h2 class="section-title">Snarky. Honest. Necessary.</h2>
+      <p class="section-desc">Weekday-keyed quotes that hit different when your life is counting down.</p>
+      <div class="quotes">
+        <div class="quote">
+          <p class="quote-day">Monday</p>
+          <p class="quote-text">"Another Monday. That's 1 of your ~2,400 remaining. Use it or it's gone."</p>
+        </div>
+        <div class="quote">
+          <p class="quote-day">Wednesday</p>
+          <p class="quote-text">"Halfway through the week. Also roughly halfway through your life. Coincidence?"</p>
+        </div>
+        <div class="quote">
+          <p class="quote-day">Friday</p>
+          <p class="quote-text">"TGIF? Sure. But you only get about 2,400 of these. Make the weekend count."</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section>
+      <p class="section-label">By the Numbers</p>
+      <div class="stats">
+        <div>
+          <p class="stat-value">63</p>
+          <p class="stat-label">Countries</p>
+        </div>
+        <div>
+          <p class="stat-value">WHO</p>
+          <p class="stat-label">Data Source</p>
+        </div>
+        <div>
+          <p class="stat-value">M/F</p>
+          <p class="stat-label">Gender-specific</p>
+        </div>
+        <div>
+          <p class="stat-value">$0</p>
+          <p class="stat-label">Price</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p class="footer-tagline">Time is the only resource you can't get back.</p>
+      <p class="footer-sub">Start counting. Start living.</p>
+      <a href="https://github.com/Guy-M-Builds/MortalityBar/releases/latest/download/MortalityBar.dmg" class="cta">Download for Mac</a>
+      <span class="cta-note">Free forever &middot; No account needed &middot; macOS 13+</span>
+      <p class="footer-meta">
+        Made by <a href="https://github.com/Guy-M-Builds">Guy</a> &middot;
+        Life expectancy data from WHO/World Bank &middot;
+        <a href="https://github.com/Guy-M-Builds/MortalityBar">Source on GitHub</a>
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    // Generate the weeks grid visualization
+    const grid = document.getElementById('weeksGrid');
+    const totalWeeks = 52 * 5; // Show 5 rows
+    const livedWeeks = Math.floor(totalWeeks * 0.55);
+    for (let i = 0; i < totalWeeks; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'week-dot' + (i >= livedWeeks ? ' empty' : '');
+      grid.appendChild(dot);
+    }
+  </script>
+
+</body>
+</html>
