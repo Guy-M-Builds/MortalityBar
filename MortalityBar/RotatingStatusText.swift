@@ -27,7 +27,7 @@ struct RotatingStatusText {
 
         case .percentRemains:
             let pct = String(format: "%.1f", calculator.percentRemaining)
-            return "\(pct)% remaining"
+            return "\(pct)% life remaining"
 
         case .mondaysLeft:
             return "~\(calculator.mondaysRemaining.formatted()) Mondays to go"
